@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    text-align:center;
+    color:white;
+    padding:20px;
+}
+.container{
+    position:relative;
+    z-index:2;
+    max-width:90%;
+}
+h1{
+    font-size:clamp(2rem,8vw,4rem);
+    animation:glow 2s infinite alternate;
+}
+p{
+    margin-top:15px;
+    font-size:clamp(1rem,4vw,1.3rem);
+}
+button{
+    margin-top:20px;
+    padding:12px 24px;
+    border:none;
+    border-radius:30px;
+    background:white;
+    color:#ff4f81;
+    font-size:1rem;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+button:hover{
+    transform:scale(1.08);
+}
+@keyframes glow{
+    from{ text-shadow:0 0 10px white; }
+    to{ text-shadow:0 0 25px white; }
+}
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:1;
+}
+.card{
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(255,255,255,0.95);
+    color:#ff4f81;
+    padding:25px;
+    border-radius:20px;
+    width:85%;
+    max-width:350px;
+    z-index:5;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+.card h2{
+    margin-bottom:10px;
+}
+.heart{
+    position:absolute;
+    font-size:24px;
+    animation:floatUp 2s linear forwards;
+}
+@keyframes floatUp{
+    from{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+    to{
+        opacity:0;
+        transform:translateY(-120px) scale(1.8);
+    }
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container">
+    <h1>🎂 Happy Birthday Kuttee i mean happiestt birthdayyy to the most special one mr. anant raj verma🎂</h1>
+    <p>Tap anywhere to get more hearts💖</p>
+    <button onclick="showCard()">Open Your Surprise</button>
+</div>
+
+<div class="card" id="card">
+    <h2>💌 A Special Wish</h2>
+    <p>
+        Happy Birthday to someone truly special.<br><br>
+       When I look at the sun or the moon,
+or listen to the birds in the air,
+I can’t help but think of you.
+You feel like the kind of person who can brighten both the darkest nights and the quietest days without even trying.
+And sometimes it feels like even the flowers would bloom a little more beautifully just from your presence.
+i wish may your life be filled with laughter,
+        love, and beautiful moments that never fade. I lovee you so muchh. you made my life really beautiful 💖
+    </p>
+    <button onclick="hideCard()">Close</button>
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="happybirthday.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let pieces = [];
+const colors = ["#ffffff", "#ffeb3b", "#ff69b4", "#00ffff", "#90ee90"];
+
+for(let i = 0; i < 150; i++){
+    pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 8 + 3,
+        speed: Math.random() * 3 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)]
+    });
+}
+
+function animateConfetti(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    pieces.forEach(piece=>{
+        piece.y += piece.speed;
+
+        if(piece.y > canvas.height){
+            piece.y = -10;
+            piece.x = Math.random() * canvas.width;
+        }
+
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(piece.x, piece.y, piece.size, piece.size);
+    });
+
+    requestAnimationFrame(animateConfetti);
+}
+
+animateConfetti();
+
+window.addEventListener("resize", ()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+function showCard(){
+    document.getElementById("card").style.display = "block";
+    document.getElementById("bgMusic").play();
+}
+
+function hideCard(){
+    document.getElementById("card").style.display = "none";
+}
+
+document.body.addEventListener("click", function(e){
+    for(let i=0;i<3;i++){
+        let heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "💖";
+        heart.style.left = (e.clientX + Math.random()*20 - 10) + "px";
+        heart.style.top = (e.clientY + Math.random()*20 - 10) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>{
+            heart.remove();
+        },2000);
+    }
+});
+</script>
+
+</body>
+</html>
